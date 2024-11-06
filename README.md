@@ -14,7 +14,7 @@
 - [🕵️ hARP: Covert Communication via ARP Cache](#%EF%B8%8F-harp-covert-communication-via-arp-cache-%EF%B8%8F%EF%B8%8F)
   - [🎯 Advantages](#-advantages)
   - [🛠️ How It Works](#%EF%B8%8F-how-it-works)
-  - [🔠 Character Mapping](#-character-mapping-in-harp)
+  - [🔠 Character Mapping](#-character-mapping)
   - [🖥️ System Requirements](#%EF%B8%8F-system-requirements)
   - [⚙️ Installation and Setup](#%EF%B8%8F-installation-and-setup)
   - [📝 Usage](#-usage)
