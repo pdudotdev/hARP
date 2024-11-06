@@ -72,6 +72,84 @@
      - Clear SSH logs to minimize traces of the communication.
      - Clear the terminal screen.
 
+## 🔠 Character Mapping in hARP
+
+This example demonstrates the exact character-to-hexadecimal mapping and ARP table entries created for the message `"python is the best!"`. We’ll walk through how each character is encoded into MAC addresses, added to the ARP table, and decoded by the receiving party.
+
+### Message: `"python is the best!"`
+
+Each character is mapped to a hexadecimal code using a predefined mapping, allowing us to convert the message into MAC address segments.
+
+#### Character Mapping for `"python is the best!"`
+
+| Character | Hex Code |
+|-----------|----------|
+| `p`       | `70`     |
+| `y`       | `79`     |
+| `t`       | `74`     |
+| `h`       | `68`     |
+| `o`       | `6F`     |
+| `n`       | `6E`     |
+| (space)   | `20`     |
+| `i`       | `69`     |
+| `s`       | `73`     |
+| `t`       | `74`     |
+| `h`       | `68`     |
+| `e`       | `65`     |
+| `b`       | `62`     |
+| `e`       | `65`     |
+| `s`       | `73`     |
+| `t`       | `74`     |
+| `!`       | `21`     |
+
+### Building MAC Addresses
+
+Each MAC address holds 6 bytes (12 hex characters). Here’s how the message `"python is the best!"` is split and padded into MAC addresses:
+
+1. **Convert Characters to Hex**:
+   - `"python is the best!"` → `70 79 74 68 6F 6E 20 69 73 20 74 68 65 20 62 65 73 74 21`
+
+2. **Construct MAC Addresses**:
+   - MAC Address 1: `70:79:74:68:6F:6E` (for "python")
+   - MAC Address 2: `20:69:73:20:74:68` (for " is th")
+   - MAC Address 3: `65:20:62:65:73:74` (for "e best")
+   - MAC Address 4: `21:00:00:00:00:00` (for `!` and padded with `00` bytes)
+
+### ARP Table Entries
+
+Each of these MAC addresses is paired with an IP address in the Initiator's ARP cache:
+
+| IP Address      | MAC Address           | Message Segment |
+|-----------------|-----------------------|------------------|
+| `192.168.1.201` | `70:79:74:68:6F:6E`   | `"python"`      |
+| `192.168.1.202` | `20:69:73:20:74:68`   | `" is th"`      |
+| `192.168.1.203` | `65:20:62:65:73:74`   | `"e best"`      |
+| `192.168.1.204` | `21:00:00:00:00:00`   | `"!" (end)`     |
+
+### Retrieving and Decoding the Message
+
+1. **Signal and Retrieval**:
+   - The Initiator signals the Responder via a ping that the message is ready.
+   - The Responder SSHes into the Initiator’s ARP cache and retrieves entries matching the specific IP range (`192.168.1.201` to `192.168.1.204`).
+
+2. **Decoding MAC Addresses**:
+   - The Responder collects the MAC addresses in the order of the IP addresses.
+   - Each MAC address is split back into its original hex pairs and decoded according to the character mapping:
+     - `70:79:74:68:6F:6E` → `"python"`
+     - `20:69:73:20:74:68` → `" is th"`
+     - `65:20:62:65:73:74` → `"e best"`
+     - `21:00:00:00:00:00` → `"!"` (end)
+
+3. **Reassemble the Message**:
+   - The decoded segments are combined to reconstruct the original message: `"python is the best!"`.
+
+### Summary
+
+- The Initiator encoded the message `"python is the best!"` as four MAC addresses, stored in the ARP cache.
+- The Responder retrieves these entries, decodes them, and reassembles the complete message, successfully receiving the transmission without direct network packets being sent with the message data.
+
+This example illustrates the complete process of encoding, transmitting, and decoding a simple message using hARP.
+
 ## 🖥️ System Requirements
 
 - **Operating System**: Linux-based systems (tested on Kali Linux)
