@@ -14,6 +14,7 @@
 - [🕵️ hARP: Covert Communication via ARP Cache](#%EF%B8%8F-harp-covert-communication-via-arp-cache-%EF%B8%8F%EF%B8%8F)
   - [🎯 Advantages](#-advantages)
   - [🛠️ How It Works](#%EF%B8%8F-how-it-works)
+  - [🔠 Character Mapping](#-character-mapping-in-harp)
   - [🖥️ System Requirements](#%EF%B8%8F-system-requirements)
   - [⚙️ Installation and Setup](#%EF%B8%8F-installation-and-setup)
   - [📝 Usage](#-usage)
@@ -72,7 +73,7 @@
      - Clear SSH logs to minimize traces of the communication.
      - Clear the terminal screen.
 
-## 🔠 Character Mapping in hARP
+## 🔠 Character Mapping
 
 This example demonstrates the exact character-to-hexadecimal mapping and ARP table entries created for the message `"python is the best!"`. We’ll walk through how each character is encoded into MAC addresses, added to the ARP table, and decoded by the receiving party.
 
