@@ -72,7 +72,7 @@ def listen_for_ping(responder_ip, callback):
         if packet.haslayer(ICMP) and packet.haslayer(IP):
             if packet[IP].src == responder_ip:
                 callback()
-    sniff(filter="icmp", prn=packet_callback, store=0, timeout=60)
+    sniff(filter="icmp", prn=packet_callback, store=0, timeout=300)
 
 # SSH into Responder to read its ARP cache
 def read_responder_message(responder_ip, ssh_username, ssh_password, mapping, subnet):
