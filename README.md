@@ -169,18 +169,20 @@ This example illustrates the complete process of encoding, transmitting, and dec
 
 ## ⚙️ Installation and Setup
 
-### 1. Clone the Repository
+### 1. Prepare the Environment
 
 ```bash
+mkdir hARP
+cd hARP
+python3 -m venv .harp
+source .harp/bin/activate
 git clone https://github.com/pdudotdev/hARP.git
-cd hARP/harp
 ```
 
 ### 2. Install Required Python Packages
 
 ```bash
-sudo apt install python3-scapy
-sudo apt install python3-paramiko
+pip install paramiko scapy
 ```
 
 ### 3. Configure SSH Access
