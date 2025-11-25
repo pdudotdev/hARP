@@ -85,36 +85,38 @@ Each character is mapped to a hexadecimal code using a predefined mapping, allow
 
 | Character | Hex Code |
 |-----------|----------|
-| `p`       | `70`     |
-| `y`       | `79`     |
-| `t`       | `74`     |
-| `h`       | `68`     |
-| `o`       | `6F`     |
-| `n`       | `6E`     |
-| (space)   | `20`     |
-| `i`       | `69`     |
-| `s`       | `73`     |
-| `t`       | `74`     |
-| `h`       | `68`     |
-| `e`       | `65`     |
-| `b`       | `62`     |
-| `e`       | `65`     |
-| `s`       | `73`     |
-| `t`       | `74`     |
-| `!`       | `21`     |
+| `p`       | `19`     |
+| `y`       | `22`     |
+| `t`       | `1D`     |
+| `h`       | `11`     |
+| `o`       | `18`     |
+| `n`       | `17`     |
+| (space)   | `2E`     |
+| `i`       | `12`     |
+| `s`       | `1C`     |
+| (space)   | `2E`     |
+| `t`       | `1D`     |
+| `h`       | `11`     |
+| `e`       | `0E`     |
+| (space)   | `2E`     |
+| `b`       | `0B`     |
+| `e`       | `0E`     |
+| `s`       | `1C`     |
+| `t`       | `1D`     |
+| `!`       | `34`     |
 
 ### Building MAC Addresses
 
 Each MAC address holds 6 bytes (12 hex characters). Here’s how the message `"python is the best!"` is split and padded into MAC addresses:
 
 1. **Convert Characters to Hex**:
-   - `"python is the best!"` → `70 79 74 68 6F 6E 20 69 73 20 74 68 65 20 62 65 73 74 21`
+   - `"python is the best!"` → `19 22 1D 11 18 17 2E 12 1C 2E 1D 11 0E 2E 0B 0E 1C 1D 34`
 
 2. **Construct MAC Addresses**:
-   - MAC Address 1: `70:79:74:68:6F:6E` (for "python")
-   - MAC Address 2: `20:69:73:20:74:68` (for " is th")
-   - MAC Address 3: `65:20:62:65:73:74` (for "e best")
-   - MAC Address 4: `21:00:00:00:00:00` (for `!` and padded with `00` bytes)
+   - MAC Address 1: `19:22:1D:11:18:17` (for "python")
+   - MAC Address 2: `2E:12:1C:2E:1D:11` (for " is th")
+   - MAC Address 3: `0E:2E:0B:0E:1C:1D` (for "e best")
+   - MAC Address 4: `34:00:00:00:00:00` (for `!` and padded with `00` bytes)
 
 ### ARP Table Entries
 
@@ -122,10 +124,10 @@ Each of these MAC addresses is paired with an IP address in the Initiator's ARP 
 
 | IP Address      | MAC Address           | Message Segment |
 |-----------------|-----------------------|------------------|
-| `192.168.1.201` | `70:79:74:68:6F:6E`   | `"python"`      |
-| `192.168.1.202` | `20:69:73:20:74:68`   | `" is th"`      |
-| `192.168.1.203` | `65:20:62:65:73:74`   | `"e best"`      |
-| `192.168.1.204` | `21:00:00:00:00:00`   | `"!" (end)`     |
+| `192.168.1.201` | `19:22:1D:11:18:17`   | `"python"`      |
+| `192.168.1.202` | `2E:12:1C:2E:1D:11`   | `" is th"`      |
+| `192.168.1.203` | `0E:2E:0B:0E:1C:1D`   | `"e best"`      |
+| `192.168.1.204` | `34:00:00:00:00:00`   | `"!" (end)`     |
 
 ### Retrieving and Decoding the Message
 
@@ -136,10 +138,10 @@ Each of these MAC addresses is paired with an IP address in the Initiator's ARP 
 2. **Decoding MAC Addresses**:
    - The Responder collects the MAC addresses in the order of the IP addresses.
    - Each MAC address is split back into its original hex pairs and decoded according to the character mapping:
-     - `70:79:74:68:6F:6E` → `"python"`
-     - `20:69:73:20:74:68` → `" is th"`
-     - `65:20:62:65:73:74` → `"e best"`
-     - `21:00:00:00:00:00` → `"!"` (end)
+     - `19:22:1D:11:18:17` → `"python"`
+     - `2E:12:1C:2E:1D:11` → `" is th"`
+     - `0E:2E:0B:0E:1C:1D` → `"e best"`
+     - `34:00:00:00:00:00` → `"!"` (end)
 
 3. **Reassemble the Message**:
    - The decoded segments are combined to reconstruct the original message: `"python is the best!"`.
