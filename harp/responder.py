@@ -12,6 +12,7 @@ ARP_START = 201
 ARP_END = 210
 MAX_MESSAGE_LENGTH = 60
 MAC_ADDRESS_FORMAT = "{}:{}:{}:{}:{}:{}"
+LISTEN_IFACE = "eth1"  # Host-only adapter if VMs
 
 # Load character to MAC mapping
 def load_mapping():
@@ -72,7 +73,7 @@ def listen_for_ping(initiator_ip, callback):
         if packet.haslayer(ICMP) and packet.haslayer(IP):
             if packet[IP].src == initiator_ip:
                 callback()
-    sniff(filter="icmp", prn=packet_callback, store=0, timeout=300)
+    sniff(filter="icmp", prn=packet_callback, store=0, timeout=300, iface=LISTEN_IFACE)
 
 # SSH into Initiator to read its ARP cache
 def read_initiator_message(initiator_ip, ssh_username, ssh_password, mapping, subnet):
