@@ -137,13 +137,7 @@ def cleanup(subnet):
         command = ["sudo", "arp", "-d", ip]
         subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     print(Style.BRIGHT + "[INFO] " + Style.RESET_ALL + "ARP cache entries cleared.")
-    # Clear SSH auth logs (Linux specific)
-    try:
-        subprocess.run(["sudo", "truncate", "-s", "0", "/var/log/auth.log"],
-                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        print(Style.BRIGHT + "[INFO] " + Style.RESET_ALL + "SSH logs cleared.")
-    except Exception as e:
-        print(Style.BRIGHT + "[ERROR] " + Style.RESET_ALL + f"Failed to clear SSH logs: {e}")
+    print(Style.BRIGHT + "[INFO] " + Style.RESET_ALL + "Clearing screen immediately.")
     print(Style.BRIGHT + "[INFO] " + Style.RESET_ALL + "Cleanup completed.")
     time.sleep(3)
     os.system('clear')

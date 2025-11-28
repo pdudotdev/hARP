@@ -70,7 +70,6 @@
    - Both the Initiator and Responder send confirmation pings after reading messages.
    - Upon receiving the confirmation, both hosts perform cleanup:
      - Remove the static ARP entries created in the ARP cache.
-     - Clear SSH logs to minimize traces of the communication.
      - Clear the terminal screen.
 
 ## 🔠 Character Mapping
@@ -251,7 +250,6 @@ sudo .harp/bin/python hARP/harp/initiator.py
 ### 4. Cleanup
 - Upon receiving the confirmation ping, both hosts:
   - Remove the static ARP entries created during the session.
-  - Clear SSH logs.
   - Clear the terminal screen.
 
 ## ⛑️ Security Considerations
