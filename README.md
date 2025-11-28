@@ -182,7 +182,7 @@ git clone https://github.com/pdudotdev/hARP.git
 ### 2. Install Required Python Packages
 
 ```bash
-pip install paramiko scapy
+pip install paramiko scapy colorama
 ```
 
 ### 3. Configure SSH Access
@@ -213,7 +213,8 @@ Prior to initiating the scripts, the Initiator user and the Responder user shoul
 On the **Responder** host:
 
 ```bash
-sudo python3 responder.py
+cd ~/hARP
+sudo .harp/bin/python hARP/harp/responder.py
 ```
 
 - Input Prompts:
@@ -225,7 +226,8 @@ sudo python3 responder.py
 On the **Initiator** host:
 
 ```bash
-sudo python3 initiator.py
+cd ~/hARP
+sudo .harp/bin/python hARP/harp/initiator.py
 ```
 
 - Input Prompts:
