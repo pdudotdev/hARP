@@ -16,7 +16,9 @@ LISTEN_IFACE = "eth1"  # Host-only adapter if VMs
 
 # Load character to MAC mapping
 def load_mapping():
-    with open('char_to_mac.json', 'r') as file:
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    json_path = os.path.join(base_dir, "char_to_mac.json")
+    with open(json_path, "r") as file:
         return json.load(file)
 
 # Determine subnet based on Responder's IP
