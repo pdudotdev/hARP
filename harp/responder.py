@@ -13,6 +13,7 @@ ARP_END = 210
 MAX_MESSAGE_LENGTH = 60
 MAC_ADDRESS_FORMAT = "{}:{}:{}:{}:{}:{}"
 LISTEN_IFACE = "eth1"  # Host-only adapter if VMs
+STOP_SNIFFER = False
 
 # Load character to MAC mapping
 def load_mapping():
@@ -75,7 +76,7 @@ def listen_for_ping(initiator_ip, callback):
         if packet.haslayer(ICMP) and packet.haslayer(IP):
             if packet[IP].src == initiator_ip:
                 callback()
-    sniff(filter="icmp", prn=packet_callback, store=0, timeout=300, iface=LISTEN_IFACE)
+    sniff(filter="icmp", prn=lambda p: None if STOP_SNIFFER else packet_callback(p), store=0, timeout=300, stop_filter=lambda _: STOP_SNIFFER, iface=LISTEN_IFACE)
 
 # SSH into Initiator to read its ARP cache
 def read_initiator_message(initiator_ip, ssh_username, ssh_password, mapping, subnet):
@@ -176,11 +177,17 @@ def main():
             reply_mac_addresses = convert_message_to_mac(reply_message, mapping)
             add_arp_entries(reply_mac_addresses, subnet)
             send_ping(initiator_ip)
+            
             # Now wait for confirmation ping from Initiator
             def on_confirmation_ping():
                 print(Style.BRIGHT + "[INFO] " + Style.RESET_ALL + "Received confirmation ping from Initiator. Performing cleanup.")
+                # Stop sniffer BEFORE cleanup to avoid scapy socket warnings
+                global STOP_SNIFFER
+                STOP_SNIFFER = True
+                time.sleep(0.2)
                 cleanup(subnet)
                 exit(0)
+            
             print(Style.BRIGHT + "[INFO] " + Style.RESET_ALL + "Waiting for confirmation ping from Initiator...")
             confirmation_listener = threading.Thread(target=listen_for_ping, args=(initiator_ip, on_confirmation_ping))
             confirmation_listener.start()
