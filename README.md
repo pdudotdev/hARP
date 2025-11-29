@@ -136,16 +136,16 @@ Each of these MAC addresses is paired with an IP address in the Initiator's ARP 
 
 | IP Address      | MAC Address           | Message Segment |
 |-----------------|-----------------------|-----------------|
-| `192.168.1.201` | `19:22:1D:11:18:17`   | `"python"`      |
-| `192.168.1.202` | `2E:12:1C:2E:1D:11`   | `" is th"`      |
-| `192.168.1.203` | `0E:2E:0B:0E:1C:1D`   | `"e best"`      |
-| `192.168.1.204` | `34:00:00:00:00:00`   | `"!"` (end)     |
+| `192.168.56.201` | `19:22:1D:11:18:17`   | `"python"`      |
+| `192.168.56.202` | `2E:12:1C:2E:1D:11`   | `" is th"`      |
+| `192.168.56.203` | `0E:2E:0B:0E:1C:1D`   | `"e best"`      |
+| `192.168.56.204` | `34:00:00:00:00:00`   | `"!"` (end)     |
 
 ### Retrieving and Decoding the Message
 
 1. **Signal and Retrieval**:
    - The Initiator signals the Responder via ICMP that the message is ready to be extracted.
-   - The Responder SSHes into the Initiator’s ARP cache and retrieves entries matching the specific IP range (`192.168.1.201` to `192.168.1.204`).
+   - The Responder SSHes into the Initiator’s ARP cache and retrieves entries matching the specific IP range (`192.168.56.201` to `192.168.56.204`).
 
 2. **Decoding MAC Addresses**:
    - The Responder collects the MAC addresses in the order of the IP addresses.
@@ -269,6 +269,7 @@ sudo .harp/bin/python hARP/harp/initiator.py
 
 ## 🎯 Planned Upgrades
 - [x] Improved CLI experience
+- [ ] Increased message length
 - [ ] More testing is needed
 
 ## ️⚠️ Disclaimer
