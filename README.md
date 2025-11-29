@@ -13,11 +13,10 @@
 
 - [🕵️ hARP: Covert Communication via ARP Cache](#%EF%B8%8F-harp-covert-communication-via-arp-cache-%EF%B8%8F%EF%B8%8F)
   - [🎯 Advantages](#-advantages)
-  - [🛠️ How It Works](#%EF%B8%8F-how-it-works)
-  - [🔠 Character Mapping](#-character-mapping)
   - [🖥️ System Requirements](#%EF%B8%8F-system-requirements)
   - [⚙️ Installation and Setup](#%EF%B8%8F-installation-and-setup)
-  - [📝 Usage](#-usage)
+  - [🔠 Character Mapping](#-character-mapping)
+  - [🛠️ How It Works - Steps and Example](#%EF%B8%8F-how-it-works---steps-and-example)
   - [⛑️ Security Considerations](#%EF%B8%8F-security-considerations)
   - [🎯 Planned Upgrades](#-planned-upgrades)
   - [⚠️ Disclaimer](#%EF%B8%8F%EF%B8%8F-disclaimer)
@@ -48,6 +47,7 @@
 ## ⚙️ Installation and Setup
 
 ### 1. Prepare the Environment
+**hARP** consists of two main components: the **Initiator** and the **Responder** - Kali Linux hosts, physical or VMs. The configuration below should be applied to **both machines**.
 
 ```bash
 mkdir hARP
@@ -78,11 +78,12 @@ If any of the two hosts has a firewall running, it should either be disabled (no
 sudo ufw allow ssh
 ```
 
-🍀 **NOTE:** Default SSH username is host username, default SSH password is host password.
+🍀 **NOTE:** Default SSH username is the host's username, default SSH password is the host's password.
 
 ### 5. Update Character Mapping (Optional)
-The **char_to_mac.json** file contains the character-to-hex mappings.
+The **char_to_mac.json** file in the repo contains the character-to-hex mappings.
 Modify or extend the mappings if you need to support additional characters.
+The two machines should always have the same **char_to_mac.json** file.
 
 ## 🔠 Character Mapping
 
@@ -124,9 +125,9 @@ Each MAC address holds 6 bytes (12 hex characters). Here’s how the message "py
    - "python is the best!" → `19 22 1D 11 18 17 2E 12 1C 2E 1D 11 0E 2E 0B 0E 1C 1D 34`
 
 2. **Construct MAC Addresses**:
-   - MAC Address 1: `19:22:1D:11:18:17` (for "python")
-   - MAC Address 2: `2E:12:1C:2E:1D:11` (for " is th")
-   - MAC Address 3: `0E:2E:0B:0E:1C:1D` (for "e best")
+   - MAC Address 1: `19:22:1D:11:18:17` (for `"python"`)
+   - MAC Address 2: `2E:12:1C:2E:1D:11` (for `" is th"`)
+   - MAC Address 3: `0E:2E:0B:0E:1C:1D` (for `"e best"`)
    - MAC Address 4: `34:00:00:00:00:00` (for `!` and padded with `00` bytes)
 
 ### ARP Table Entries
@@ -134,32 +135,32 @@ Each MAC address holds 6 bytes (12 hex characters). Here’s how the message "py
 Each of these MAC addresses is paired with an IP address in the Initiator's ARP cache:
 
 | IP Address      | MAC Address           | Message Segment |
-|-----------------|-----------------------|------------------|
+|-----------------|-----------------------|-----------------|
 | `192.168.1.201` | `19:22:1D:11:18:17`   | `"python"`      |
 | `192.168.1.202` | `2E:12:1C:2E:1D:11`   | `" is th"`      |
 | `192.168.1.203` | `0E:2E:0B:0E:1C:1D`   | `"e best"`      |
-| `192.168.1.204` | `34:00:00:00:00:00`   | `"!" (end)`     |
+| `192.168.1.204` | `34:00:00:00:00:00`   | `"!"` (end)     |
 
 ### Retrieving and Decoding the Message
 
 1. **Signal and Retrieval**:
-   - The Initiator signals the Responder via a ping that the message is ready.
+   - The Initiator signals the Responder via ICMP that the message is ready to be extracted.
    - The Responder SSHes into the Initiator’s ARP cache and retrieves entries matching the specific IP range (`192.168.1.201` to `192.168.1.204`).
 
 2. **Decoding MAC Addresses**:
    - The Responder collects the MAC addresses in the order of the IP addresses.
    - Each MAC address is split back into its original hex pairs and decoded according to the character mapping:
-     - 19:22:1D:11:18:17 → "python"
-     - 2E:12:1C:2E:1D:11 → " is th"
-     - 0E:2E:0B:0E:1C:1D → "e best"
-     - 34:00:00:00:00:00 → "!"` (end)
+     - `19:22:1D:11:18:17` → `"python"`
+     - `2E:12:1C:2E:1D:11` → `" is th"`
+     - `0E:2E:0B:0E:1C:1D` → `"e best"`
+     - `34:00:00:00:00:00` → `"!"` (end)
 
 3. **Reassemble the Message**:
-   - The decoded segments are combined to reconstruct the original message: "python is the best!".
+   - The decoded segments are combined to reconstruct the original message: `"python is the best!"`.
 
 ### Summary
 
-- The Initiator encoded the message "python is the best!" as four MAC addresses, stored in the ARP cache.
+- The Initiator encoded the message `"python is the best!"` as four MAC addresses, stored in the ARP cache.
 - The Responder retrieves these entries, decodes them, and reassembles the complete message, successfully receiving the transmission without direct network packets being sent with the message data.
 
 This example illustrates the complete process of encoding, transmitting, and decoding a simple message using hARP.
@@ -169,10 +170,10 @@ This example illustrates the complete process of encoding, transmitting, and dec
 Prior to initiating the scripts, the Initiator user and the Responder user should **securely share** their IP addresses and SSH credentials, as well as who's going to run the Initiator and Responder respectively. Once this initial exchange is done, they will be able to run hARP whenever they need without any prerequisites.
 
 Let's assume we have two Linux hosts:
-- **Responder**: 192.168.56.124
-- **Initiator**: 192.168.56.125
-- **SSH credentials**: kali:kali
-- *Agreed IP range for fake ARP entries**: 192.168.56.201-.210
+- **Responder**: `192.168.56.124`
+- **Initiator**: `192.168.56.125`
+- **SSH credentials**: `kali`:`kali`
+- **Agreed IP range for fake ARP entries**: `192.168.56.201-.210`
 
 ### 1. Start the Responder
 On the **Responder** host:
@@ -252,7 +253,7 @@ sudo .harp/bin/python hARP/harp/initiator.py
 ![3-9](docs/3-9.png)
 
 ### 4. Cleanup
-- Upon receiving the confirmation ping, both hosts:
+- Upon sending/receiving the confirmation ping, both hosts:
   - Remove the static ARP entries created during the session.
 
 ![4-1](docs/4-1.png)
