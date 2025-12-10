@@ -75,6 +75,7 @@ def listen_for_ping(initiator_ip, callback):
     def packet_callback(packet):
         if packet.haslayer(ICMP) and packet.haslayer(IP):
             if packet[IP].src == initiator_ip:
+                # 'callback' becomes on_message_ping or on_confirmation_ping depending on context; listen_for_ping calls it when the expected ping is detected.
                 callback()
     sniff(filter="icmp", prn=lambda p: None if STOP_SNIFFER else packet_callback(p), store=0, timeout=300, stop_filter=lambda _: STOP_SNIFFER, iface=LISTEN_IFACE)
 
